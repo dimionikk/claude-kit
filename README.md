@@ -1,7 +1,4 @@
 # claude-kit
-
-Команди для копіювання (відкрий цю сторінку в браузері на цільовій машині).
-
 ## Запуск
 
 **Windows PowerShell:**
@@ -22,11 +19,7 @@ Set-ExecutionPolicy -Scope Process Bypass -Force
 Скрипт спитає `ANTHROPIC_API_KEY` — встав ключ виїзду (Scope: воркспейс
 `налаштування комп'ютерів`, ліміт $10). Ключ живе тільки в цьому вікні.
 
-## Прибирання після виїзду
-
-Закриття вікна **нічого не чистить** — зникає лише ключ із пам'яті.
-Стан Claude лишається на диску, доки не запустиш cleanup.
-
+## Прибирання
 **Windows PowerShell:**
 ```
 irm https://raw.githubusercontent.com/dimionikk/claude-kit/main/cleanup.ps1 | iex
