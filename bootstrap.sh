@@ -3,9 +3,13 @@ set -euo pipefail
 
 REPO_URL="https://github.com/dimionikk/claude-kit.git"
 ARCHIVE_BASE="https://github.com/dimionikk/claude-kit/archive/refs"
-REF="${CLAUDE_KIT_REF:-v1}"
+REF="${CLAUDE_KIT_REF:-main}"
 WORKDIR="${CLAUDE_FIELDWORK_DIR:-$HOME/claude-fieldwork}"
 MODEL="${CLAUDE_MODEL:-claude-sonnet-5}"
+
+# увесь стан Claude (транскрипти, сесії, конфіг) — усередині WORKDIR,
+# щоб cleanup зносив його разом із клоном і не чіпав $HOME/.claude клієнта
+export CLAUDE_CONFIG_DIR="$WORKDIR/state"
 
 say() { printf '\033[1;36m>> %s\033[0m\n' "$*"; }
 err() { printf '\033[1;31m!! %s\033[0m\n' "$*" >&2; }
@@ -52,6 +56,8 @@ if [ "${#ANTHROPIC_API_KEY}" -lt 40 ]; then
 fi
 
 # 4. запуск
+mkdir -p "$CLAUDE_CONFIG_DIR"
 cd "$WORKDIR"
 say "запускаю claude ($MODEL) у $(pwd)"
+say "стан Claude: $CLAUDE_CONFIG_DIR (видалиться разом із $WORKDIR через cleanup)"
 exec claude --model "$MODEL"

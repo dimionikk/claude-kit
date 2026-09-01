@@ -1,9 +1,13 @@
 $ErrorActionPreference = "Stop"
 
 $RepoUrl = "https://github.com/dimionikk/claude-kit.git"
-$Ref     = if ($env:CLAUDE_KIT_REF)       { $env:CLAUDE_KIT_REF }       else { "v1" }
+$Ref     = if ($env:CLAUDE_KIT_REF)       { $env:CLAUDE_KIT_REF }       else { "main" }
 $WorkDir = if ($env:CLAUDE_FIELDWORK_DIR) { $env:CLAUDE_FIELDWORK_DIR } else { "$env:USERPROFILE\claude-fieldwork" }
 $Model   = if ($env:CLAUDE_MODEL)         { $env:CLAUDE_MODEL }         else { "claude-sonnet-5" }
+
+# увесь стан Claude усередині WorkDir -> cleanup зносить його разом із клоном,
+# профіль клієнта (%USERPROFILE%\.claude) не чіпається
+$env:CLAUDE_CONFIG_DIR = "$WorkDir\state"
 
 function Say($m)  { Write-Host ">> $m" -ForegroundColor Cyan }
 function Fail($m) { Write-Host "!! $m" -ForegroundColor Red; exit 1 }
@@ -51,6 +55,8 @@ if ($env:ANTHROPIC_API_KEY.Length -lt 40) {
 }
 
 # 4. запуск
+New-Item -ItemType Directory -Force -Path $env:CLAUDE_CONFIG_DIR | Out-Null
 Set-Location $WorkDir
 Say "запускаю claude ($Model) у $WorkDir"
+Say "стан Claude: $env:CLAUDE_CONFIG_DIR (видалиться разом із $WorkDir через cleanup)"
 claude --model $Model
