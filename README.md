@@ -42,7 +42,7 @@ curl -fsSL https://raw.githubusercontent.com/dimionikk/claude-kit/main/cleanup.s
 - Робочий каталог `~/claude-fieldwork/` — клон кіта.
 - `~/claude-fieldwork/state/` — увесь стан Claude (транскрипти, сесії, конфіг),
   винесений сюди через `CLAUDE_CONFIG_DIR`, щоб не чіпати `~/.claude` клієнта.
-- Встановлений Claude Code: `~/.local/share/claude`, `~/.local/bin/claude`.
+- Встановлений Claude Code: `~/.local/{share,bin,state}/claude`, `~/.cache/claude`.
 - Рядки в історії шелла / PowerShell (ключ у них не потрапляє — вводиться
   через prompt, не як команда).
 - Якщо ставився Node.js заради npm-фолбеку — лишається.

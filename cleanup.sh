@@ -6,7 +6,8 @@ WORKDIR="${CLAUDE_FIELDWORK_DIR:-$HOME/claude-fieldwork}"
 echo ">> зношу Claude Code"
 claude uninstall 2>/dev/null || true
 npm rm -g @anthropic-ai/claude-code 2>/dev/null || true
-rm -rf "$HOME/.local/share/claude" "$HOME/.local/bin/claude"
+rm -rf "$HOME/.local/share/claude" "$HOME/.local/bin/claude" \
+       "$HOME/.local/state/claude" "$HOME/.cache/claude" "$HOME/.config/claude"
 
 echo ">> видаляю робочий каталог + увесь стан Claude ($WORKDIR)"
 rm -rf "$WORKDIR"
@@ -30,7 +31,8 @@ done
 unset ANTHROPIC_API_KEY CLAUDE_CONFIG_DIR 2>/dev/null || true
 
 echo ">> лишки з назвою 'claude' у домашній теці:"
-find "$HOME" -maxdepth 3 -iname '*claude*' 2>/dev/null || true
+find "$HOME" -maxdepth 4 -iname '*claude*' \
+  -not -path "*/.mozilla/*" -not -path "*/.config/google-chrome/*" 2>/dev/null || true
 
 cat <<'EOF'
 

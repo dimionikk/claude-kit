@@ -4,7 +4,12 @@ $WorkDir = if ($env:CLAUDE_FIELDWORK_DIR) { $env:CLAUDE_FIELDWORK_DIR } else { "
 Write-Host ">> зношу Claude Code" -ForegroundColor Cyan
 claude uninstall
 npm rm -g @anthropic-ai/claude-code
-Remove-Item -Recurse -Force "$env:USERPROFILE\.local\share\claude", "$env:USERPROFILE\.local\bin\claude*"
+Remove-Item -Recurse -Force `
+  "$env:USERPROFILE\.local\share\claude", `
+  "$env:USERPROFILE\.local\bin\claude*", `
+  "$env:USERPROFILE\.local\state\claude", `
+  "$env:USERPROFILE\.cache\claude", `
+  "$env:USERPROFILE\.config\claude"
 
 Write-Host ">> видаляю робочий каталог + увесь стан Claude ($WorkDir)" -ForegroundColor Cyan
 Remove-Item -Recurse -Force $WorkDir
@@ -29,7 +34,8 @@ Clear-History
 Remove-Item Env:\ANTHROPIC_API_KEY, Env:\CLAUDE_CONFIG_DIR
 
 Write-Host ">> лишки з назвою 'claude' у профілі:" -ForegroundColor Cyan
-Get-ChildItem -Path $env:USERPROFILE -Recurse -Depth 2 -Filter "*claude*" -ErrorAction SilentlyContinue |
+Get-ChildItem -Path $env:USERPROFILE -Recurse -Depth 3 -Filter "*claude*" -ErrorAction SilentlyContinue |
+  Where-Object { $_.FullName -notmatch '\\AppData\\.*\\(Cache|Code Cache|Network)\\' } |
   Select-Object -ExpandProperty FullName
 
 Write-Host ""
