@@ -1,0 +1,10 @@
+# ніколи не комітити секрети чи рантайм-сміття
+*.key
+*.pem
+.env
+.env.*
+token
+*.token
+.credentials.json
+.claude/
+claude-fieldwork/
