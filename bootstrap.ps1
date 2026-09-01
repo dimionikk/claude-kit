@@ -42,13 +42,13 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 }
 
 # 3. ключ — тільки в пам'яті сесії
+# видимий Read-Host: вставка в прихований (-AsSecureString) не працює в консолі Windows/SPICE
 if (-not $env:ANTHROPIC_API_KEY) {
-  $sec  = Read-Host "ANTHROPIC_API_KEY" -AsSecureString
-  $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec)
-  $env:ANTHROPIC_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
-  [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+  $env:ANTHROPIC_API_KEY = (Read-Host "ANTHROPIC_API_KEY (встав ключ, Enter)").Trim()
 }
-if (-not $env:ANTHROPIC_API_KEY) { Fail "ключ порожній" }
+if ($env:ANTHROPIC_API_KEY.Length -lt 40) {
+  Fail "ключ порожній або обрізаний (довжина $($env:ANTHROPIC_API_KEY.Length)) — вставка не спрацювала, спробуй ще раз"
+}
 
 # 4. запуск
 Set-Location $WorkDir

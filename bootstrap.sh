@@ -43,9 +43,13 @@ if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
   printf 'ANTHROPIC_API_KEY: '
   read -rs ANTHROPIC_API_KEY </dev/tty
   printf '\n'
-  export ANTHROPIC_API_KEY
 fi
-[ -n "${ANTHROPIC_API_KEY:-}" ] || { err "ключ порожній"; exit 1; }
+ANTHROPIC_API_KEY="$(printf '%s' "${ANTHROPIC_API_KEY:-}" | tr -d '[:space:]')"
+export ANTHROPIC_API_KEY
+if [ "${#ANTHROPIC_API_KEY}" -lt 40 ]; then
+  err "ключ порожній або обрізаний (${#ANTHROPIC_API_KEY} символів) — спробуй ще раз"
+  exit 1
+fi
 
 # 4. запуск
 cd "$WORKDIR"
